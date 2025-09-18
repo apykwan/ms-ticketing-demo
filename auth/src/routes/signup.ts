@@ -14,18 +14,13 @@ router.post('/api/users/signup',
   (req: Request, res: Response) => {
     const errors = validationResult(req);
 
-    console.log('errors', errors)
-
     if (!errors.isEmpty()) {
       throw new RequestValidationError(errors.array());
     }
 
-    console.log('Creating a user...');
-
     throw new DatabaseConnectionError();
 
     res.send({});
-    
 });
 
 
