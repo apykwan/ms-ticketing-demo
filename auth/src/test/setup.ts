@@ -1,15 +1,17 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
-import { app } from '../app';
+let mongo: MongoMemoryServer;
 
-beforeAll(async() => {
-  const mongo = new MongoMemoryServer();
-  const mongoUri = mongo.getUri();
-
-  await mongoose.connect(mongoUri);
+beforeAll(async () => {
+  process.env.JWT_KEY = 'adfadsf';
+  mongo = await MongoMemoryServer.create();
+  const uri = mongo.getUri();
+  await mongoose.connect(uri);
 });
 
-beforeEach(async() => {
-  const collections = await mongoose.connection.db?.collections();
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongo.stop();
 });
