@@ -1,7 +1,15 @@
-FROM node:alpine
-
+# Stage 1: build
+FROM node:alpine AS builder
 WORKDIR /app
-COPY package.json .
-RUN npm install --omit=dev
+COPY package.json tsconfig.json ./
+RUN npm install
 COPY . .
-CMD ["npm", "start"]
+RUN npm run build
+
+# Stage 2: production
+FROM node:alpine
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY --from=builder /app/dist ./dist
+CMD ["node", "dist/index.js"]
