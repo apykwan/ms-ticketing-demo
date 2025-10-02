@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import axios from 'axios';
 
-export default function SignupPage() {
+export default function Signup() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -15,22 +14,14 @@ export default function SignupPage() {
     setPassword(e.target.value);
   }
 
-  async function onSubmit(e: FormEvent) {
+  function onSubmit(e: FormEvent) {
     e.preventDefault();
 
-    const response = await axios.post('/api/users/signup', {
-      email, password
-    });
-
-    console.log(response);
+    console.log(email, password);
   }
 
   return (
-    <form 
-      className="p-5 mx-auto bg-lite" 
-      style={{ width: "500px" }}
-      onSubmit={onSubmit}
-    >
+    <form className="p-5 mx-auto" style={{ width: "500px" }}>
       <h1 className="mb-3">Sign up</h1>
       <div className="mb-3">
         <label>Email Address</label>
@@ -40,7 +31,7 @@ export default function SignupPage() {
         <label>Password</label>
         <input value={password} onChange={handlePassword} type="password" className="form-control" />
       </div>
-      <button className="btn btn-primary w-100">Submit</button>
+      <button className="btn btn-primary w-100">Sign Up</button>
     </form>
   );
 }
