@@ -1,20 +1,26 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import axios from 'axios';
+import { useRouter } from "next/navigation";
 
-interface CustomErrors {
-  errors: {
-    message: string;
-    field?: string;
-  }[];
+import useRequest from '../../../hooks/use-request';
+
+interface UserBody {
+  email: string;
+  password: string;
 }
 
 export default function SignupPage() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errors, setErrors] = useState<CustomErrors['errors']>([]);
-
+  const router = useRouter();
+  const { doRequest, errors } = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: { email, password } as UserBody,
+    onSuccess: () => router.push('/')
+  });
+  
   function handleEmail(e: ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
   }
@@ -26,15 +32,7 @@ export default function SignupPage() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('/api/users/signup', {
-        email, password
-      });
-
-      console.log(response);
-    } catch (err) {
-      setErrors(err.response?.data.errors || []);
-    }
+    await doRequest();
   }
 
   return (
@@ -53,16 +51,7 @@ export default function SignupPage() {
         <input value={password} onChange={handlePassword} type="password" className="form-control" />
       </div>
       
-      {errors.length > 0 && (
-        <div className="alert alert-danger" role="alert">
-          <h4>Ooops...</h4>
-          <ul>
-            {errors.map(err => (
-              <li key={err.field || err.message}>{err.message}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {errors}
       
       <button className="btn btn-primary w-100">Submit</button>
     </form>
