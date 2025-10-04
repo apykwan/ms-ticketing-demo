@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieSession from 'cookie-session';
+import cors from 'cors';
 
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
@@ -14,9 +15,10 @@ app.use(express.json());
 app.use(
   cookieSession({
     signed: false,
-    secure: process.env.NODE_ENV !== 'test'
+    secure: process.env.NODE_ENV === 'production'
   })
 );
+app.use(cors());
 
 app.use(currentUserRouter);
 app.use(signinRouter);

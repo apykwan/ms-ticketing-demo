@@ -1,12 +1,27 @@
-'use client';
+import { cookies } from 'next/headers';
+import axios from 'axios';
 
-import { useCurrentUser } from '../hooks/use-current-user';
+export default async function LandingPage() {
+  const cookieStore = await cookies(); 
+  const sessionValue = cookieStore.get('session')?.value;
 
-export default function LandingPage() {
-  const currentUser = useCurrentUser();
+  console.log('Session value:', sessionValue);
 
-  console.log(currentUser);
-  return (
-    <h1 className="text-success">Landing Page</h1>
-  );
+  if (!sessionValue) {
+    return <h1>Hello Guest (No session cookie)</h1>;
+  }
+
+  try {
+    const res = await axios.get('http://auth-srv:3000/api/users/currentuser', {
+      headers: {
+        Cookie: `session=${sessionValue}`, 
+      },
+    });
+
+    const currentUser = res.data.currentUser;
+    return <h1>Hello {currentUser?.email || 'Guest'}</h1>;
+  } catch (error) {
+    console.error('API Error:', error.response?.data || error.message);
+    return <h1>Hello Guest (API Error)</h1>;
+  }
 }
