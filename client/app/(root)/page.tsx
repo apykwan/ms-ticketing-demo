@@ -1,27 +1,19 @@
 import { cookies } from 'next/headers';
-import axios from 'axios';
+
+import buildClient from '../api/build-client';
 
 export default async function LandingPage() {
   const cookieStore = await cookies(); 
   const sessionValue = cookieStore.get('session')?.value;
-
-  console.log('Session value:', sessionValue);
-
-  if (!sessionValue) {
-    return <h1>Hello Guest (No session cookie)</h1>;
-  }
-
-  try {
-    const res = await axios.get('http://auth-srv:3000/api/users/currentuser', {
-      headers: {
-        Cookie: `session=${sessionValue}`, 
-      },
-    });
-
-    const currentUser = res.data.currentUser;
-    return <h1>Hello {currentUser?.email || 'Guest'}</h1>;
-  } catch (error) {
-    console.error('API Error:', error.response?.data || error.message);
-    return <h1>Hello Guest (API Error)</h1>;
-  }
+  
+  const { data } =  await (await buildClient(sessionValue)).get('/api/users/currentuser');
+  const currUser = data.currentUser;
+  return (
+    <div>
+      <h1 className="text-primary">Landing Page</h1>
+      <h2>User
+        <span className="text-info mx-3">{currUser ? currUser.email : 'unknown'}</span>
+      </h2>
+    </div>
+  );
 }
