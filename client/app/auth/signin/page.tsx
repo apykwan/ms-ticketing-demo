@@ -10,12 +10,12 @@ interface UserBody {
   password: string;
 }
 
-export default function SignupPage() {
+export default function SigninPage() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const router = useRouter();
   const { doRequest, errors } = useRequest({
-    url: '/api/users/signup',
+    url: '/api/users/signin',
     method: 'post',
     body: { email, password } as UserBody,
     onSuccess: () => router.push('/')
@@ -41,7 +41,7 @@ export default function SignupPage() {
       style={{ width: "500px" }}
       onSubmit={onSubmit}
     >
-      <h1 className="mb-3">Sign up</h1>
+      <h1 className="mb-3 text-secondary">Sign in</h1>
       <div className="mb-3">
         <label>Email Address</label>
         <input value={email} onChange={handleEmail} className="form-control" />

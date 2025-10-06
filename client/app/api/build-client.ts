@@ -9,9 +9,6 @@ export default function buildClient(sessionValue: string) {
         Cookie: `session=${sessionValue}`, 
       }
     })
-  } else {
-    return axios.create({
-      baseURL: '/'
-    });
   }
+  return null;
 }
