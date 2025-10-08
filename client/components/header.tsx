@@ -1,15 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 
-interface CurrentUser {
-  email: string;
-  id: string;
-}
+import { useCurrUser } from '@/contexts/current-user-context';
 
-export default function Header({ currentUser }: { currentUser: CurrentUser }) {
+export default function Header() {
+  const { currUser } = useCurrUser();
+
+  console.log('current user', currUser);
   const links = [
-    !currentUser && { label: 'Sign Up', href: '/auth/signup' },
-    !currentUser && { label: 'Sign In', href: '/auth/signin' },
-    currentUser && { label: 'Sign Out', href: '/auth/signout' },
+    !currUser && { label: 'Sign Up', href: '/auth/signup' },
+    !currUser && { label: 'Sign In', href: '/auth/signin' },
+    currUser && { label: 'Sign Out', href: '/auth/signout' },
   ]
     .filter(linkConfig => linkConfig)
     .map(({ label, href }) => {

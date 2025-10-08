@@ -1,9 +1,9 @@
-import { cache } from 'react';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-import buildClient from './build-client'; 
+import buildClient from '../build-client'; 
 
-const getCurrentUser = async () => {
+export async function GET() {
   const cookieStore = await cookies(); 
   const sessionValue = cookieStore.get('session')?.value;
 
@@ -15,7 +15,5 @@ const getCurrentUser = async () => {
     currentUser = data.currentUser;
   }
 
-  return currentUser;
+  return NextResponse.json({ currentUser });
 };
-
-export default getCurrentUser;

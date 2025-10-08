@@ -1,5 +1,5 @@
-import getCurrentUser from './api/get-current-user';
 import Header from '@/components/header';
+import CurrUserProvider from '@/contexts/current-user-context';
 import './globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -13,16 +13,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const currentUser = await getCurrentUser();
-    
   return (
     <html lang="en">
       <body>
-        <div className="container">
-          <Header currentUser={currentUser} />
-          {children}
-        </div>
+        <CurrUserProvider>
+          <div className="container">
+            <Header />
+            {children}
+          </div>
+        </CurrUserProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,7 +1,9 @@
-import getCurrentUser from '../api/get-current-user';
+'use client';
 
-export default async function LandingPage() {
-  const currentUser = await getCurrentUser();
+import { useCurrUser } from '@/contexts/current-user-context';
+
+export default function LandingPage() {
+  const { currUser: currentUser } = useCurrUser();
 
   return (
     <div>
