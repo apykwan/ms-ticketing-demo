@@ -34,7 +34,6 @@ export default function CurrUserProvider({ children }: { children: React.ReactNo
     }
   }, []);
 
-  // Initial fetch
   useEffect(() => {
     refetchUser();
   }, [refetchUser]);

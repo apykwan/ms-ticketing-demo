@@ -7,7 +7,7 @@ interface UserRequest<T> {
   url: string;
   method: 'post' | 'get' | 'patch' | 'delete';
   body: T;
-  onSuccess?: (data: any) => void; // Optional for flexibility
+  onSuccess?: (data: any) => void;
 }
 
 interface CustomError {
@@ -24,17 +24,15 @@ export default function useRequest<T>({ url, method, body, onSuccess }: UserRequ
       const response = await axios[method](url, body);
       setErrors(null);
 
-      // Update user state based on action
       if (url.includes('signout')) {
-        setCurrUser(null); // Immediate client update
-        await refetchUser(); // Confirm with server
+        setCurrUser(null); 
+        await refetchUser(); 
       } else if (url.includes('signin') || url.includes('signup')) {
-        await refetchUser(); // Fetch new user data
+        await refetchUser();
       }
 
-      if (onSuccess) {
-        onSuccess(response.data);
-      }
+      if (onSuccess) onSuccess(response.data);
+
       return response.data;
     } catch (err: any) {
       setErrors(

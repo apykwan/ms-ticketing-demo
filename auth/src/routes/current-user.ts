@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express';
 
-import { currentUser } from '../middlewares/current-user';
+import { currentUser } from '@apkmstickets/common';
 
 const router = express.Router();
 

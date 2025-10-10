@@ -1,4 +1,6 @@
 **/node_modules
 skaffold
 client/.next
+client/build
 **/dist
+common/
