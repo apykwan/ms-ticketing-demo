@@ -12,9 +12,17 @@ build:
         manual:
           - src: 'src/**/*.{js,ts,jsx,tsx}'
             dest: .
+    - image: apkwan/ticket-tickets
+      context: ./tickets
+      sync:
+        manual:
+          - src: 'src/**/*.{js,ts,jsx,tsx}'
+            dest: .
     - image: apkwan/ticket-client
       context: ./client
       sync:
         manual:
           - src: 'src/**/*.{js,ts,jsx,tsx}'
             dest: .
+  local:
+    push: true
