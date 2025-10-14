@@ -24,7 +24,7 @@ router.post(
   });
 
   await ticket.save();
-  res.sendStatus(201);
+  res.status(201).send(ticket);
 });
 
 export { router as createTicketRouter };

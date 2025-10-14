@@ -7,7 +7,7 @@ interface TicketAttrs {
 }
 
 interface TicketDoc extends mongoose.Document {
-  title: number;
+  title: string;
   price: number;
   userId: string;
 }
@@ -32,7 +32,7 @@ const ticketSchema = new mongoose.Schema({
 }, {
   toJSON: {
     transform(doc, ret) {
-      (ret as any) = ret._id;
+      (ret as any).id = ret._id.toString();
       delete (ret as any)._id,
       delete (ret as any).__v;
     }
