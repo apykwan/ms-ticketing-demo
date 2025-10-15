@@ -1,7 +1,6 @@
 import express, { type Request, type Response } from 'express';
 import mongoose from 'mongoose';
-import { body } from 'express-validator';
-import { NotFoundError} from '@apkmstickets/common';
+import { NotFoundError } from '@apkmstickets/common';
 
 import { Ticket } from '@/models/ticket';
 
