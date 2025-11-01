@@ -3,4 +3,3 @@ skaffold
 client/.next
 client/build
 **/dist
-common/
