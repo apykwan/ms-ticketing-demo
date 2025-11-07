@@ -9,7 +9,15 @@ async function start () {
     if (!process.env.JWT_KEY) throw new Error('Invalid JWT');
     if (!process.env.MONGO_URI) throw new Error('MONGO_URI must be defined');
     
-    await natsWrapper.connect('ticketing', 'adsf', 'http://nats-srv:4222');
+    await natsWrapper.connect('ticketing', 'adsf2343', 'http://nats-srv:4222');
+    natsWrapper.client.on('close', () => {
+        console.log('NATS connectino closed');
+        process.exit();
+    });
+
+    process.on('SIGINT', () => natsWrapper.client.close());
+    process.on('SIGTERM', () => natsWrapper.client.close());
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
   } catch (err) {
