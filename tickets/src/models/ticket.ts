@@ -33,16 +33,15 @@ const ticketSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       (ret as any).id = ret._id.toString();
-      delete (ret as any)._id,
+      delete (ret as any)._id;
       delete (ret as any).__v;
     }
   }
 });
 
-ticketSchema.statics.build = (attrs: TicketAttrs) => {
+ticketSchema.statics.build = function (attrs: TicketAttrs) {
   return new Ticket(attrs);
 }
 
-const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
-
+const Ticket = (mongoose.models.Ticket as TicketModel) || mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
 export { Ticket };

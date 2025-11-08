@@ -7,7 +7,7 @@
     "build": "tsc && tsc-alias",
     "dev": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts",
     "start": "node dist/index.js",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll --no-cache --runInBand"
   },
   "jest": {
     "preset": "ts-jest",
@@ -17,7 +17,9 @@
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
-    }
+    },
+    "modulePathIgnorePatterns": ["<rootDir>/dist/"],
+    "testMatch": ["**/__test__/**/*.test.ts"]
   },
   "keywords": [],
   "author": "",
