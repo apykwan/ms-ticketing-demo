@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next';
 
-export const nextConfig: NextConfig = {
+const nextConfig: NextConfig = {
   experimental: { appDir: true } as any,
   allowedDevOrigins: ['https://ticket.local'],
 };
+
+export default nextConfig;
