@@ -18,15 +18,19 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
-    "modulePathIgnorePatterns": ["<rootDir>/dist/"],
-    "testMatch": ["**/__test__/**/*.test.ts"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ],
+    "testMatch": [
+      "**/__test__/**/*.test.ts"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@apkmstickets/common": "^1.0.10",
+    "@apkmstickets/common": "^1.0.11",
     "cookie-session": "^2.1.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
