@@ -1,9 +1,13 @@
+import { randomUUID } from 'crypto';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
+import { Ticket, TicketDoc } from '@/models/ticket';
+
 declare global {
   var signin: () => string[];
+  var buildTicket: () => Promise<TicketDoc>;
 }
 
 jest.mock('../nats-wrapper');
@@ -36,24 +40,28 @@ afterAll(async () => {
 });
 
 global.signin = () => {
-  // Build a JWT payload. { id, email }
-  const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
-    email: 'test@test.com'
-  };
+    const id = new mongoose.Types.ObjectId().toHexString();
 
-  // Create the JWT
-  const token = jwt.sign(payload, process.env.JWT_KEY!);
+    const payload = {
+        id,
+        email: `${id}@testemail.com`
+    };
 
-  // Build session Object { jwt: MY_JWT }
-  const session = { jwt: token };
+    const token = jwt.sign(payload, process.env.JWT_KEY!);
+    const session = { jwt: token };
+    const sessionJSON = JSON.stringify(session);
+    const base64 = Buffer.from(sessionJSON).toString('base64');
 
-  // Turn that session into JSON
-  const sessionJSON = JSON.stringify(session);
+    return [`session=${base64}`];
+}
 
-  // Take JSON and ecode it as base64
-  const base64 = Buffer.from(sessionJSON).toString('base64');
+global.buildTicket = async () => {
+    const ticket = Ticket.build({
+        title: 'concert',
+        price: 20
+    });
 
-  // return a string that the cookie with the encoded data
-  return [`session=${base64}`];
+    await ticket.save();
+
+    return ticket;
 }

@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 import { app } from '@/app';
 import { Order, OrderStatus } from '@/models/order';
-import { Ticket } from '@/models/ticket';
 
 it('return an error if the ticket does not exist', async () => {
     const ticketId = new mongoose.Types.ObjectId();
@@ -15,13 +14,8 @@ it('return an error if the ticket does not exist', async () => {
         .expect(404);
 });
 
-
 it('return an error if the ticket is already reserved', async () => {
-    const ticket = Ticket.build({
-        title: 'concert',
-        price: 20
-    });
-    await ticket.save();
+    const ticket = await global.buildTicket();
 
     const order = Order.build({
         ticket,
@@ -39,11 +33,7 @@ it('return an error if the ticket is already reserved', async () => {
 });
 
 it('reserves a ticket', async () => {
-    const ticket = Ticket.build({
-        title: 'concert',
-        price: 20
-    });
-    await ticket.save();
+    const ticket = await global.buildTicket();
 
     await request(app)
         .post('/api/orders')
