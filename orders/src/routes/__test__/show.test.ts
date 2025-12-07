@@ -1,7 +1,6 @@
 import request from 'supertest';
 
 import { app } from '@/app';
-import { Order, OrderStatus } from '@/models/order';
 
 it('fetches the order', async () => {
     // Create a ticket
