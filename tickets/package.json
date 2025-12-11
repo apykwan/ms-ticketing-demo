@@ -18,15 +18,19 @@
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     },
-    "modulePathIgnorePatterns": ["<rootDir>/dist/"],
-    "testMatch": ["**/__test__/**/*.test.ts"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ],
+    "testMatch": [
+      "**/__test__/**/*.test.ts"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@apkmstickets/common": "^1.0.10",
+    "@apkmstickets/common": "^1.0.20",
     "cookie-session": "^2.1.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -34,6 +38,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.18.1",
+    "mongoose-update-if-current": "^1.4.0",
     "node-nats-streaming": "^0.3.2"
   },
   "devDependencies": {

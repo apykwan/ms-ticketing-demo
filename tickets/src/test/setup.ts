@@ -2,10 +2,12 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 
+import { Ticket, TicketDoc } from '@/models/ticket';
+
 declare global {
   var signin: () => string[];
+  var buildTicket: () => Promise<TicketDoc>;
 }
-
 jest.mock('../nats-wrapper');
 
 let mongo: MongoMemoryServer;
@@ -56,4 +58,16 @@ global.signin = () => {
 
   // return a string that the cookie with the encoded data
   return [`session=${base64}`];
+}
+
+global.buildTicket = async () => {
+    const ticket = Ticket.build({
+        title: 'concert',
+        price: 20,
+        userId: '123'
+    });
+
+    await ticket.save();
+
+    return ticket;
 }
