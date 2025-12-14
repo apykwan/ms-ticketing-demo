@@ -1,6 +1,7 @@
-import { randomUUID } from 'crypto';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import { TicketCreatedEvent } from '@apkmstickets/common';
+
 import jwt from 'jsonwebtoken';
 
 import { Ticket, TicketDoc } from '@/models/ticket';
@@ -8,6 +9,7 @@ import { Ticket, TicketDoc } from '@/models/ticket';
 declare global {
   var signin: () => string[];
   var buildTicket: () => Promise<TicketDoc>;
+  var createTicketListenEvent: () => TicketCreatedEvent['data'];
 }
 
 jest.mock('@/nats-wrapper');
@@ -65,4 +67,14 @@ global.buildTicket = async () => {
     await ticket.save();
 
     return ticket;
+}
+
+global.createTicketListenEvent = () => {
+  return {
+    version: 0,
+    id: new mongoose.Types.ObjectId().toHexString(),
+    title: 'concert',
+    price: 10,
+    userId: new mongoose.Types.ObjectId().toHexString(),
+  }
 }

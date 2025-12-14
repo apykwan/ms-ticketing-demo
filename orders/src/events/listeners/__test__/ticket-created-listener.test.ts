@@ -1,0 +1,53 @@
+import { Message } from 'node-nats-streaming';
+import { TicketCreatedEvent } from '@apkmstickets/common';
+
+import { TicketCreatedListener } from '../ticket-created-listener';
+import { natsWrapper } from '@/nats-wrapper';
+import { Ticket } from '@/models/ticket';
+
+const setup = async () => {
+    // create an instance of the listener
+    const listener = new TicketCreatedListener(natsWrapper.client);
+
+    // create a fake data event
+    const data: TicketCreatedEvent['data'] = global.createTicketListenEvent();
+
+    // create a fake message object
+    const msg: Message = {
+        ack: jest.fn()
+    } as unknown as Message;
+
+    return { listener, data, msg };
+}
+
+it('creates and saves a ticket', async () => {
+    // call the onMessage function with the data object + message object
+    const { listener, data, msg } = await setup();
+
+    // call the actual onMessage
+    await listener.onMessage(data, msg);
+
+    // write assertions to make sure a ticket was created!
+    const ticket = await Ticket.findById(data.id);
+    
+    expect(ticket).toBeDefined();
+    expect(ticket!.title).toEqual(data.title);
+    expect(ticket!.price).toEqual(data.price);
+});
+
+it('acks the message', async () => {
+    // call the onMessage function with te data object + message object
+    const { listener, data, msg } = await setup();
+
+    await listener.onMessage(data, msg);
+
+    // write assertions to make sure a ticket was created
+    expect(msg.ack).toHaveBeenCalled();
+});
+
+it('acks the message', async () => {
+    // call the onMessage function with te data object + message object
+    const { listener, data, msg } = await setup();
+   
+    // write assertions to make sure ack function is called
+});
