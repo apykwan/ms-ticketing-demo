@@ -4,6 +4,7 @@ import { DatabaseConnectionError } from '@apkmstickets/common';
 import { app } from './app';
 import { natsWrapper } from '@/nats-wrapper';
 import { OrderCreatedListener } from '@/events/listeners/order-created-listener';
+import { OrderCancelledListener } from '@/events/listeners/order-cancelled-listener';
 
 async function start () {
   try {
@@ -27,6 +28,7 @@ async function start () {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
