@@ -24,5 +24,11 @@ build:
         manual:
           - src: 'src/**/*.{js,ts,jsx,tsx}'
             dest: .
+    - image: apkwan/ticket-expiration
+      context: ./expiration
+      sync:
+        manual:
+          - src: 'src/**/*.{js,ts,jsx,tsx}'
+            dest: .
   local:
     push: true
