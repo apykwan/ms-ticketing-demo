@@ -30,7 +30,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@apkmstickets/common": "^1.0.24",
+    "@apkmstickets/common": "^1.0.26",
     "bull": "^4.16.5",
     "node-nats-streaming": "^0.3.2"
   },

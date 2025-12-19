@@ -1,6 +1,5 @@
-import { DatabaseConnectionError } from '@apkmstickets/common';
-
 import { natsWrapper } from '@/nats-wrapper';
+import { OrderCreatedListener } from '@/events/listeners/order-created-listener';
 
 async function start () {
   try {
@@ -20,6 +19,8 @@ async function start () {
 
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
+
+    new OrderCreatedListener(natsWrapper.client).listen();
   } catch (err) {
     console.log(err);
   }
