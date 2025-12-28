@@ -1,12 +1,13 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+// import { OrderStatus } from '@apkmstickets/common';
 
-// import { Ticket, TicketDoc } from '@/models/ticket';
+// import { Order, OrderDoc } from '@/models/order';
 
 declare global {
   var signin: () => string[];
-  // var buildTicket: () => Promise<TicketDoc>;
+  // var buildOrder: () => Promise<OrderDoc>;
 }
 jest.mock('../nats-wrapper');
 
@@ -60,14 +61,18 @@ global.signin = () => {
   return [`session=${base64}`];
 }
 
-// global.buildTicket = async () => {
-//     const ticket = Ticket.build({
-//         title: 'concert',
-//         price: 20,
-//         userId: '123'
+// global.buildOrder = async () => {
+//     const order = Order.build({
+//         version: 0,
+//         userId: 'some-user',
+//         status: OrderStatus.Created,
+//         ticket: {
+//             id: 'some-id',
+//             price: 10
+//         }
 //     });
 
-//     await ticket.save();
+//     await order.save();
 
-//     return ticket;
+//     return order;
 // }

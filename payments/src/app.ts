@@ -3,6 +3,8 @@ import cookieSession from 'cookie-session';
 import cors from 'cors';
 import { errorHandler, NotFoundError, currentUser } from '@apkmstickets/common';
 
+import { createChargeRouter } from '@/routes/new';
+
 const app = express();
 app.set('trust proxy', true);
 app.use(express.json());
@@ -13,6 +15,9 @@ app.use(
   })
 );
 app.use(cors());
+
+app.use(currentUser);
+app.use(createChargeRouter);
 
 app.all(/.*/, async (req, res, next) => {
   next(new NotFoundError());
