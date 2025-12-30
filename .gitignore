@@ -3,3 +3,4 @@ skaffold
 client/.next
 client/build
 **/dist
+infra/k8s/stripe-secret.yaml
