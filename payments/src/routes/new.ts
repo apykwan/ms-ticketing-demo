@@ -1,5 +1,6 @@
 import express, { type Request, type Response } from 'express';
 import { body } from 'express-validator';
+import { stripe } from '@/stripeSetup';
 
 import {
     requireAuth,
@@ -16,12 +17,11 @@ const router = express.Router();
 router.post('/api/payments', 
     requireAuth,
     [
-        body('token').not().isEmpty(),
         body('orderId').not().isEmpty()
     ],
     validateRequest,     
     async (req: Request, res: Response) => {
-        const { token, orderId } = req.body;
+        const { orderId } = req.body;
 
         const order = await Order.findById(orderId);
 
@@ -29,9 +29,20 @@ router.post('/api/payments',
 
         if (order.userId !== req.currentUser!.id) throw new NotAuthorizedError();
 
-        if (order.status =  OrderStatus.Cancelled) throw new BadRequestError('Cannot pay for an cancelled order');
+        if (order.status === OrderStatus.Cancelled) throw new BadRequestError('Cannot pay for an cancelled order');
 
-        res.send({ success: true });
+        try {
+            const payment = await stripe.paymentIntents.create({
+                amount: Math.round(order.price * 100),
+                currency: 'usd',
+            });
+
+            console.log('Stripe payment successful:', payment.id);
+            res.status(201).send({ success: true, id: payment.id });
+        } catch (err: any) {
+            console.error('Stripe payment failed', err.message);
+            res.status(400).send({ success: false });
+        }
     }
 );
 
