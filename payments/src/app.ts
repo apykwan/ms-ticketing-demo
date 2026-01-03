@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
+import 'dotenv/config';
 import { errorHandler, NotFoundError, currentUser } from '@apkmstickets/common';
 
 import { createChargeRouter } from '@/routes/new';

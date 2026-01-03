@@ -34,10 +34,9 @@ router.post('/api/payments',
         try {
             const payment = await stripe.paymentIntents.create({
                 amount: Math.round(order.price * 100),
-                currency: 'usd',
+                currency: 'usd'
             });
 
-            console.log('Stripe payment successful:', payment.id);
             res.status(201).send({ success: true, id: payment.id });
         } catch (err: any) {
             console.error('Stripe payment failed', err.message);

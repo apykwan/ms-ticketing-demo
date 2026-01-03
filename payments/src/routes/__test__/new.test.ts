@@ -4,6 +4,9 @@ import { OrderStatus } from '@apkmstickets/common';
 
 import { app } from '@/app';
 import { Order } from '@/models/order';
+import { stripe } from '@/stripeSetup';
+
+jest.mock('../../stripeSetup');
 
 it ('returns 404 when purchasing an order that cannot be found', async () => {
     await request(app)
@@ -53,4 +56,29 @@ it('returns a 400 when purchasing a cancelled order', async () => {
             orderId: order.id
         })
         .expect(400);
+});
+
+it('returns a 201 with valid inputs', async () => {
+    const userId = new mongoose.Types.ObjectId().toHexString();
+    const price = Math.floor(Math.random() * 100000);
+    const order = Order.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
+        userId,
+        version: 0,
+        price,
+        status: OrderStatus.Created
+    });
+    await order.save();
+
+    const response = await request(app)
+        .post('/api/payments')
+        .set('Cookie', global.signin(userId))
+        .send({
+            orderId: order.id
+        })
+        .expect(201);
+    expect(response.body.id).toBeDefined();   
+    
+    const chargeOptions = (stripe.paymentIntents.create as jest.Mock).mock.calls[0][0];
+    expect(chargeOptions.amount).toEqual(Math.round(order.price * 100));
 });
