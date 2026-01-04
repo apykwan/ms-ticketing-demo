@@ -4,6 +4,7 @@ import { OrderStatus } from '@apkmstickets/common';
 
 import { app } from '@/app';
 import { Order } from '@/models/order';
+import { Payment } from '@/models/payment';
 import { stripe } from '@/stripeSetup';
 
 jest.mock('../../stripeSetup');
@@ -76,9 +77,16 @@ it('returns a 201 with valid inputs', async () => {
         .send({
             orderId: order.id
         })
-        .expect(201);
+        
     expect(response.body.id).toBeDefined();   
     
     const chargeOptions = (stripe.paymentIntents.create as jest.Mock).mock.calls[0][0];
     expect(chargeOptions.amount).toEqual(Math.round(order.price * 100));
+
+    const payment = await Payment.findOne({
+        orderId: order.id,
+        stripeId: 'pi_test_123'
+    });
+
+    expect(payment).not.toBeNull();
 });

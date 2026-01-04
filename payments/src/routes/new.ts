@@ -10,7 +10,10 @@ import {
     NotAuthorizedError,
     OrderStatus
 } from '@apkmstickets/common';
-import { Order } from '../models/order';
+import { Order } from '@/models/order';
+import { Payment } from '@/models/payment';
+import { PaymentCreatedPublisher } from '@/events/publishers/payment-created-publisher';
+import { natsWrapper } from '@/nats-wrapper';
 
 const router = express.Router();
 
@@ -32,12 +35,23 @@ router.post('/api/payments',
         if (order.status === OrderStatus.Cancelled) throw new BadRequestError('Cannot pay for an cancelled order');
 
         try {
-            const payment = await stripe.paymentIntents.create({
+            const charge = await stripe.paymentIntents.create({
                 amount: Math.round(order.price * 100),
                 currency: 'usd'
             });
 
-            res.status(201).send({ success: true, id: payment.id });
+            const payment = Payment.build({
+                orderId,
+                stripeId: charge.id
+            });
+            await payment.save();
+            await new PaymentCreatedPublisher(natsWrapper.client).publish({
+                id: payment.id,
+                orderId: payment.orderId,
+                stripeId: payment.stripeId
+            });
+
+            res.status(201).send({ success: true, id: payment.id, stripeId: payment.stripeId });
         } catch (err: any) {
             console.error('Stripe payment failed', err.message);
             res.status(400).send({ success: false });

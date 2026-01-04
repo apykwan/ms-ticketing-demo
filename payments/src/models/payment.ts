@@ -32,7 +32,7 @@ const paymentScehma = new mongoose.Schema({
     }
 });
 
-paymentScehma.statics.biuld = (attrs: PaymentAttrs) => {
+paymentScehma.statics.build = (attrs: PaymentAttrs) => {
     return new Payment(attrs);
 };
 
