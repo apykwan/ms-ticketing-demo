@@ -7,7 +7,6 @@ import { useCurrUser } from '@/contexts/current-user-context';
 export default function Header() {
   const { currUser } = useCurrUser();
 
-  console.log('current user', currUser);
   const links = [
     !currUser && { label: 'Sign Up', href: '/auth/signup' },
     !currUser && { label: 'Sign In', href: '/auth/signin' },
@@ -20,7 +19,7 @@ export default function Header() {
       </li>
     });
   return (
-    <nav className="havbar navbar-light bg-light p-2">
+    <nav className="havbar navbar-light bg-light p-2 mb-2">
       <Link href="/" className="navbar-brand">
         Ticket
       </Link>

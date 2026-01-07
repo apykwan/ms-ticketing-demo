@@ -8,7 +8,7 @@ export default function LandingPage() {
   return (
     <div>
       <h1 className="text-primary">Landing Page</h1>
-      {currentUser ? <h2>Welcome {currentUser.email}</h2> : 'unknown'}
+      {currentUser ? <h2>Welcome {currentUser.email}</h2> : 'Not log in'}
     </div>
   );
 }

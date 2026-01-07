@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM node:alpine AS builder
+FROM node:18 AS builder
 WORKDIR /app
 COPY package.json tsconfig.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: production
-FROM node:alpine
+FROM node:18
 WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev
