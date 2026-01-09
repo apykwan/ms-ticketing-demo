@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import useRequest from '@/hooks/use-request';
 
 export default function NewTicketPage () {
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState('');
+    const router = useRouter();
 
     const{ doRequest, errors } = useRequest({
         url: '/api/tickets',
         method: 'post',
         body: { title, price },
-        onSuccess: (ticket) => console.log(ticket)
+        onSuccess: (ticket) => router.push('/')
     });
 
     function onBlur() {

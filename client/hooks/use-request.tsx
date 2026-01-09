@@ -6,7 +6,7 @@ import { useCurrUser } from '@/contexts/current-user-context';
 interface UserRequest<T> {
   url: string;
   method: 'post' | 'get' | 'patch' | 'delete';
-  body: T;
+  body?: T;
   onSuccess?: (data: any) => void;
 }
 
