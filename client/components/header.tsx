@@ -19,11 +19,12 @@ export default function Header() {
       </li>
     });
   return (
-    <nav className="havbar navbar-light bg-light p-2 mb-2">
-      <Link href="/" className="navbar-brand">
+    <nav className="d-flex align-items-center justify-content-between navbar navbar-light bg-light p-2 mb-3">
+      <Link href="/tickets/new" className="navbar-brand text-success">
         Ticket
       </Link>
-      <div className="d-flex justify-content-end">
+      <div className="d-flex align-items-center justify-content-end">
+        {currUser && <span className="text-info mx-3">{currUser.email.split('@')[0]}</span>}
         <ul className="nav d-flex align-items-center">
           {links}
         </ul>

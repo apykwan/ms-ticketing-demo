@@ -15,7 +15,7 @@ export default function TicketShow() {
         url: '/api/orders',
         method: 'post',
         body: { ticketId },
-        onSuccess: (order) => console.log(order)
+        onSuccess: (order) => router.push(`/orders/${order.id}`)
     });
 
     useEffect(() => {

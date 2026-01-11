@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
-interface CurrentUser {
+export interface CurrentUser {
   email: string;
   id: string;
 }
