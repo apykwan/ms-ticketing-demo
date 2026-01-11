@@ -51,7 +51,14 @@ router.post('/api/payments',
                 stripeId: payment.stripeId
             });
 
-            res.status(201).send({ success: true, id: payment.id, stripeId: payment.stripeId });
+            console.log('charge', charge);
+
+            res.status(201).send({ 
+                success: true, 
+                id: payment.id, 
+                stripeId: payment.stripeId,
+                client_secret: charge.client_secret
+            });
         } catch (err: any) {
             console.error('Stripe payment failed', err.message);
             res.status(400).send({ success: false });

@@ -1,5 +1,8 @@
 import { headers } from 'next/headers';
 
+import Timer from '@/components/timer';
+import StripeWrapper from '@/components/stripe-checkout-form';
+
 interface OrderShowProps {
     params: Promise<{ orderId: string; }>
 }
@@ -7,7 +10,6 @@ interface OrderShowProps {
 export default async function OrderShow ({ params }: OrderShowProps) {
     const { orderId } = await params;
     const requestHeaders = await headers();
-
     const cookie = requestHeaders.get('cookie') || '';
 
     const res = await fetch(`http://orders-srv:3000/api/orders/${orderId}`, {
@@ -19,9 +21,10 @@ export default async function OrderShow ({ params }: OrderShowProps) {
     }
 
     const order = await res.json();
-    console.log(order);
-
     return (
-        <div>OrderShow</div>
+        <div>
+            <Timer expiresAt={order.expiresAt} />
+            <StripeWrapper orderId={orderId} price={parseFloat(order.ticket.price)} />
+        </div>
     );
 }
