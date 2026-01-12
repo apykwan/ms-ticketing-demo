@@ -1,42 +1,19 @@
-'use client';
+import TicketDetail from '@/components/ticket-detail';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
+interface TicketShowProps {
+    params: Promise<{ ticketId: string; }>
+}
 
-import useRequest from '@/hooks/use-request';
-import { Ticket } from '@/types/ticket';
+export default async function TicketShow({ params }: TicketShowProps) {
+    const { ticketId } = await params;
+    const res = await fetch(`http://tickets-srv:3000/api/tickets/${ticketId}`);
 
-export default function TicketShow() {
-    const { ticketId } = useParams<{ ticketId: string }>();
-    const [ticket, setTicket] = useState<Ticket | null>(null);
-    const router = useRouter();
-    const { doRequest, errors } = useRequest({
-        url: '/api/orders',
-        method: 'post',
-        body: { ticketId },
-        onSuccess: (order) => router.push(`/orders/${order.id}`)
-    });
+    if (!res.ok) {
+        return <div className="alert alert-danger">Ticket not found.</div>;
+    }
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const { data } = await axios.get(`/api/tickets/${ticketId}`);
-                setTicket(data as Ticket);
-            } catch (err: any) {
-                router.push('/');
-                return;
-            }
-        })();
-    }, []);
+    const ticket = await res.json();    
 
-    if (!ticket) return <div>Loading ticket...</div>;
-    return (
-        <div>
-            <h1>{ticket.title}</h1>
-            <h4>Price: {ticket.price}</h4>
-            {errors}
-            <button onClick={doRequest} className="btn btn-primary">Purchase</button>
-        </div>
-    );
+    if (!ticket) return;
+    return <TicketDetail ticket={ticket} />;
 }

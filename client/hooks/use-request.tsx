@@ -17,7 +17,6 @@ interface CustomError {
 
 export default function useRequest<T>({ url, method, body, onSuccess }: UserRequest<T>) {
   const [errors, setErrors] = useState(null);
-  const [tickets, setTickets] = useState([]);
   const { setCurrUser, refetchUser } = useCurrUser();
 
   async function doRequest() {

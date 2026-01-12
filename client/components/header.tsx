@@ -10,6 +10,8 @@ export default function Header() {
   const links = [
     !currUser && { label: 'Sign Up', href: '/auth/signup' },
     !currUser && { label: 'Sign In', href: '/auth/signin' },
+    currUser && { label: 'Sell Tickets', href: '/tickets/new'},
+    currUser && { label: 'My Orders', href: '/orders'},
     currUser && { label: 'Sign Out', href: '/auth/signout' },
   ]
     .filter(linkConfig => linkConfig)
@@ -20,7 +22,7 @@ export default function Header() {
     });
   return (
     <nav className="d-flex align-items-center justify-content-between navbar navbar-light bg-light p-2 mb-3">
-      <Link href="/tickets/new" className="navbar-brand text-success">
+      <Link href="/" className="navbar-brand text-success">
         Ticket
       </Link>
       <div className="d-flex align-items-center justify-content-end">

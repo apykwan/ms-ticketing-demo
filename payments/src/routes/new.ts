@@ -45,13 +45,12 @@ router.post('/api/payments',
                 stripeId: charge.id
             });
             await payment.save();
+            
             await new PaymentCreatedPublisher(natsWrapper.client).publish({
                 id: payment.id,
                 orderId: payment.orderId,
                 stripeId: payment.stripeId
             });
-
-            console.log('charge', charge);
 
             res.status(201).send({ 
                 success: true, 
