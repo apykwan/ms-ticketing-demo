@@ -5,6 +5,8 @@ import { DatabaseConnectionError } from '@apkmstickets/common';
 
 async function start () {
   try {
+    console.log('Starting up...');
+    
     if (!process.env.JWT_KEY) throw new Error('Invalid JWT');
     if (!process.env.MONGO_URI) throw new Error('MONGO_URI must be defined');
     
