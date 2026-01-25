@@ -8,7 +8,7 @@ export default function buildClient(sessionValue: string) {
         Host: 'ticket.local',
         Cookie: `session=${sessionValue}`, 
       }
-    })
+    });
   }
   return null;
 }
