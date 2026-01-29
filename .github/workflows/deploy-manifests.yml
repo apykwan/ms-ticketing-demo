@@ -1,0 +1,24 @@
+name: auth
+
+on: 
+    push:
+        paths:
+            - 'auth/**'
+        branches:
+            - main
+    pull_request:
+        paths:
+            - 'auth/**'
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: digitalocean/action-doctl@v2
+              with:
+                token: ${{ secrets.DO_API_TOKEN }}
+            - run: doctl kubernetes cluster kubeconfig save ticket
+            - run: | 
+                kubectl apply -f infra/k8s
+                kubectl apply -f infra/k8s-prod

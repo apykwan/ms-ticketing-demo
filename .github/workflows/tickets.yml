@@ -1,0 +1,42 @@
+name: tickets
+
+on: 
+    push:
+        paths:
+            - 'tickets/**'
+        branches:
+            - main
+    pull_request:
+        paths:
+            - 'tickets/**'
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/cache@v5
+              with:
+                path: ~/.npm
+                key: tickets-${{ hashFiles('tickets/package-lock.json') }}
+            - run: cd tickets && npm install && npm run test:ci
+    build:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - run: cd tickets && docker build --cache-from apkwan/ticket-tickets:latest -t apkwan/ticket-tickets .
+            - uses: docker/login-action@v2
+              with:
+                username: ${{ secrets.DOCKER_USERNAME }}
+                password: ${{ secrets.DOCKER_PASSWORD }}
+            - run: docker push apkwan/ticket-tickets
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: digitalocean/action-doctl@v2
+              with:
+                token: ${{ secrets.DO_API_TOKEN }}
+            - run: doctl kubernetes cluster kubeconfig save ticket
+            - run: kubectl rollout restart deployment tickets-depl
